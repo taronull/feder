@@ -1,0 +1,21 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/fraunces.woff2");
+}
+@font-face {
+  font-family: "Fraunces";
+  font-style: italic;
+  src: url("/fonts/fraunces-italic.woff2");
+}
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter.woff2");
+}
+@font-face {
+  font-family: "Fira Code";
+  src: url("/fonts/fira-code.woff2");
+}
