@@ -44,7 +44,7 @@ defmodule Feder.Core.Components do
         theme(),
         text_box(:double),
         tickle(),
-        "font-display font-semibold italic text-base cursor-default",
+        "font-display italic font-medium text-base cursor-default",
         "phx-submit-loading:opacity-75"
       ]}
       {@rest}
