@@ -17,7 +17,7 @@ defmodule Feder.Core.Components do
 
   def heading(assigns) do
     ~H"""
-    <.dynamic_tag 
+    <.dynamic_tag
       name={"h#{@level}"}
       class={[
         "text-xl md:text-2xl font-display font-semibold",
@@ -90,6 +90,7 @@ defmodule Feder.Core.Components do
     """
   end
 
+  # Put modal status in socket so LiveSocket don't wipe it.
   @doc """
   Renders a modal.
 
@@ -142,7 +143,7 @@ defmodule Feder.Core.Components do
 
   def input(assigns) do
     with assigns <- maybe_field(assigns) do
-    ~H"""
+      ~H"""
       <input
         id={assigns[:id] || @name}
         name={@name}
@@ -151,7 +152,7 @@ defmodule Feder.Core.Components do
         class={[theme(), text_box(), "w-full", @class]}
         {@rest}
       />
-    """
+      """
     end
   end
 

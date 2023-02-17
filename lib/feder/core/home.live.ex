@@ -14,8 +14,8 @@ defmodule Feder.Core.Home.Live do
       <article class="space-y-4">
         <.heading class={["text-2xl md:text-3xl"]}>
           <img class="w-12" src="/images/symbol.svg" />
-          <span class="font-medium">Feder</span> 
-          <span class="font-normal">—</span> 
+          <span class="font-medium">Feder</span>
+          <span class="font-normal">—</span>
           <span class="font-normal italic">Social Journal</span>
         </.heading>
         <p>Collect and share the difference you make.</p>
@@ -30,16 +30,14 @@ defmodule Feder.Core.Home.Live do
             <.google_oauth />
           </li>
           <li>
-            <.button 
-              onclick="document.querySelector('#continue-with-email-modal').showModal()"
-            >
+            <.button onclick="document.querySelector('#continue-with-email-modal').showModal()">
               Continue with Email
             </.button>
             <.modal id="continue-with-email-modal">
               <.form for={:account} phx-submit="mail_access" class="space-y-4">
                 <.input name="email" placeholder="Your email" />
                 <.button phx-disable-with>
-                  Send Link 
+                  Send Link
                 </.button>
               </.form>
             </.modal>

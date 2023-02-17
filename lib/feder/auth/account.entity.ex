@@ -3,7 +3,9 @@ defmodule Feder.Auth.Account.Entity do
 
   schema "account" do
     field :email, :string
-    has_many :access, Feder.Auth.Access.Entity, foreign_key: :account_id, references: :id
+
+    has_many :access, Feder.Auth.Access.Entity, foreign_key: :account_id
+    has_many :profile, Feder.Social.Profile.Entity, foreign_key: :account_id
 
     timestamps()
   end

@@ -13,8 +13,7 @@ defmodule Feder.Auth.Components do
         data-auto_prompt="false"
       >
       </div>
-      <div class="g_id_signin" data-type="standard" data-text="continue_with">
-      </div>
+      <div class="g_id_signin" data-type="standard" data-text="continue_with"></div>
     </button>
     """
   end

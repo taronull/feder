@@ -1,4 +1,4 @@
-defmodule Feder.Repo.Migrations.CreateAuthTables do
+defmodule Feder.Repo.Migrations.CreateAuth do
   use Ecto.Migration
 
   def change do
@@ -18,7 +18,7 @@ defmodule Feder.Repo.Migrations.CreateAuthTables do
 
     execute """
     alter table "account" 
-      add column "email" varchar collate case_insensitive not null;
+      add column "email" varchar(255) collate case_insensitive not null;
     """
 
     create unique_index(:account, [:email])

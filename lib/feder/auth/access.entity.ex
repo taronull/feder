@@ -3,7 +3,8 @@ defmodule Feder.Auth.Access.Entity do
 
   schema "access" do
     field :token, :binary
-    belongs_to :account, Feder.Auth.Account.Entity, foreign_key: :account_id, references: :id
+
+    belongs_to :account, Feder.Auth.Account.Entity, foreign_key: :account_id
 
     timestamps()
   end
@@ -13,7 +14,6 @@ defmodule Feder.Auth.Access.Entity do
     |> cast(attrs, [:token, :account_id])
     |> ensure(:token)
     |> validate_required([:token, :account_id])
-    |> unsafe_validate_unique(:token, Feder.Repo)
     |> foreign_key_constraint(:account_id)
     |> unique_constraint(:token)
   end
