@@ -26,7 +26,7 @@ defmodule Feder.Core.Layouts do
       </.link>
     </header>
 
-    <.flash messages={@flash} class={["fixed top-16 inset-x-8 w-auto"]} />
+    <.flash messages={@flash} class={["fixed top-16 inset-x-8"]} />
 
     <main class="mx-auto px-8 max-w-[32rem]">
       <%= @inner_content %>

@@ -24,6 +24,7 @@ defmodule Feder.Router do
 
     live_session :auth, on_mount: Feder.Auth.Socket do
       live "/", Core.Home.Live
+      live "/access", Auth.Access.Live
       live "/account", Auth.Account.Live
     end
   end

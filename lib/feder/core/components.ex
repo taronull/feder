@@ -76,7 +76,7 @@ defmodule Feder.Core.Components do
           theme(:invert),
           text_box(),
           tickle(),
-          "group flex items-center justify-between gap-2"
+          "group flex items-center justify-between gap-4"
         ]}>
           <p><%= message %></p>
           <Heroicons.x_mark
@@ -149,7 +149,7 @@ defmodule Feder.Core.Components do
         name={@name}
         value={assigns[:value]}
         phx-feedback-for={@name}
-        class={[theme(), text_box(), "w-full", @class]}
+        class={[theme(), text_box(), @class]}
         {@rest}
       />
       """

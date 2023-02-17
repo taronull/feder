@@ -1,5 +1,5 @@
 defmodule Feder.Core.Home.Live do
-  # No layout.
+  # Only root layout is applied.
   use Phoenix.LiveView
   use Feder, :html
   use Feder, :components
@@ -10,7 +10,6 @@ defmodule Feder.Core.Home.Live do
       "mx-auto p-8 w-[32rem] max-w-full h-screen",
       "grid content-center gap-8"
     ]}>
-      <.flash messages={@flash} />
       <article class="space-y-4">
         <.heading class={["text-2xl md:text-3xl"]}>
           <img class="w-12" src="/images/symbol.svg" />
@@ -30,27 +29,13 @@ defmodule Feder.Core.Home.Live do
             <.google_oauth />
           </li>
           <li>
-            <.button onclick="document.querySelector('#continue-with-email-modal').showModal()">
-              Continue with Email
-            </.button>
-            <.modal id="continue-with-email-modal">
-              <.form for={:account} phx-submit="mail_access" class="space-y-4">
-                <.input name="email" placeholder="Your email" />
-                <.button phx-disable-with>
-                  Send Link
-                </.button>
-              </.form>
-            </.modal>
+            <.link href={~p"/access"} class="block w-max">
+              <.button>Continue with Email</.button>
+            </.link>
           </li>
         <% end %>
       </menu>
     </div>
     """
-  end
-
-  def handle_event("mail_access", %{"email" => email}, socket) do
-    Feder.Auth.mail_access(email)
-
-    {:noreply, put_flash(socket, :info, "Check your email")}
   end
 end
