@@ -8,11 +8,12 @@ defmodule Feder.Auth.Socket do
   Logs the account in on `Phoenix.LiveView.Socket` layer
   """
   def on_mount(:default, _params, session, socket) do
-    token = session["#{Access.token_key()}"]
-    id = token && Access.get_account_id_by_token(token)
+    {:cont, assign_new(socket, Account.id_key(), fn -> access_account(session) end)}
+  end
 
-    socket
-    |> assign_new(Account.id_key(), fn -> id end)
-    |> then(&{:cont, &1})
+  defp access_account(session) do
+    with token when is_binary(token) <- session["#{Access.token_key()}"] do
+      Access.get_account_id_by_token(token)
+    end
   end
 end
