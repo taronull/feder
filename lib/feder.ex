@@ -38,7 +38,7 @@ defmodule Feder do
 
   def conn do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, layouts: [html: Feder.Core.Layouts]
 
       import Feder.Gettext
 
