@@ -6,7 +6,7 @@ defmodule Feder.Auth.Access.Live do
     <.form for={:account} phx-submit="mail_access" class="space-y-4">
       <.heading>Continue with Email</.heading>
 
-      <.input name="email" placeholder="Your email" />
+      <.input name="email" type="email" placeholder="Your email" />
 
       <.button phx-disable-with>
         Send Access Link
@@ -18,6 +18,9 @@ defmodule Feder.Auth.Access.Live do
   def handle_event("mail_access", %{"email" => email}, socket) do
     Feder.Auth.mail_access(email)
 
-    {:noreply, put_flash(socket, :info, "Check your email")}
+    socket
+    |> put_flash(:info, "Check your email")
+    |> redirect(to: "/")
+    |> then(&{:noreply, &1})
   end
 end

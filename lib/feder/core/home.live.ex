@@ -10,6 +10,8 @@ defmodule Feder.Core.Home.Live do
       "mx-auto p-8 w-[32rem] max-w-full h-screen",
       "grid content-center gap-8"
     ]}>
+      <.flash messages={@flash} />
+
       <article class="space-y-4">
         <.heading class={["text-2xl md:text-3xl"]}>
           <img class="w-12" src="/images/symbol.svg" />
@@ -19,6 +21,7 @@ defmodule Feder.Core.Home.Live do
         </.heading>
         <p>Collect and share the difference you make.</p>
       </article>
+
       <menu class="space-y-4">
         <%= if @account_id do %>
           <li>

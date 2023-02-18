@@ -15,18 +15,21 @@ defmodule Feder.Router do
     plug Feder.Auth.AccountID
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", Feder do
     pipe_through :browser
 
     live_session :auth, on_mount: Feder.Auth.Socket do
       live "/", Core.Home.Live
+
       live "/access", Auth.Access.Live
       live "/account", Auth.Account.Live
+
+      live "/profile", Social.Profile.Live
     end
+  end
+
+  pipeline :api do
+    plug :accepts, ["json"]
   end
 
   scope "/", Feder do

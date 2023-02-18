@@ -26,5 +26,6 @@ defmodule Feder.Social.Profile.Entity do
     entity
     |> cast(attrs, [:name, :image])
     |> validate_required([:name])
+    |> validate_length(:name, max: 255)
   end
 end

@@ -166,7 +166,7 @@ defmodule Feder.Core.Components do
   def text_box(:single), do: "block rounded border border-current px-4 py-1"
   def text_box(:double), do: "block rounded border-[3px] border-double border-current px-4 py-1"
 
-  def tickle, do: "hover:contrast-[.95] active:opacity-[.75]"
+  def tickle, do: "hover:contrast-[.90] active:opacity-[.75]"
 
   defp maybe_field(%{field: {f, field}} = assigns) do
     assigns
