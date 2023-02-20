@@ -48,7 +48,17 @@ defmodule Feder.Social.Profile.Live do
     """
   end
 
-  def handle_event("create_profile", params, socket) do
+  def handle_event("create_profile", _params, socket) do
+    consume_uploaded_entries(socket, :image, fn %{path: path}, entry ->
+      {:ok,
+       Feder.Storage.upload(path,
+         name: entry.uuid,
+         type: entry.client_type,
+         size: entry.client_size
+       )}
+    end)
+    |> dbg()
+
     {:noreply, socket}
   end
 

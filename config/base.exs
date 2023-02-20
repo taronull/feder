@@ -4,7 +4,14 @@ import Config
 
 config :feder,
   ecto_repos: [Feder.Repo],
+  # TODO: Separate into a module config.
   google_oauth_id: "445767527784-ff0vsts09jg62lqpbfak3vri3vo5qagf.apps.googleusercontent.com"
+
+config :feder, Feder.Storage,
+  key: "K005H09LU8UztzmXJw5PuNPc0v/AdjQ",
+  key_id: "005a9f84557c67c0000000005",
+  bucket_id: "dae9af78545575078c66071c",
+  bucket_name: "feder-dev"
 
 config :feder, Feder.Endpoint,
   url: [host: "localhost"],

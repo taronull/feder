@@ -37,6 +37,8 @@ defmodule Feder.Router do
 
     post "/access", Auth.Conn, :sign_in
     delete "/access", Auth.Conn, :sign_out
+
+    get "/storage/*path", Storage, :download
   end
 
   # Enables LiveDashboard and Swoosh mailbox preview in development.
