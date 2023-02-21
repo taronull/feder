@@ -1,4 +1,5 @@
 defmodule Feder.Storage do
+  # TODO: Separate conn. `plug` macros conflict.
   use Feder, :conn
   use Tesla
 

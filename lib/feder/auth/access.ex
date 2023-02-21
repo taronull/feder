@@ -3,14 +3,6 @@ defmodule Feder.Auth.Access do
   alias Feder.Auth.Account
   alias __MODULE__
 
-  @token_key :access_token
-  @token_cookie [
-    name: "_#{@token_key}",
-    sign: true,
-    max_age: 365 * 60 * 24 * 60,
-    same_site: "Lax"
-  ]
-
   @spec grant(String.t()) :: %Access.Entity{}
   def grant(email) do
     # TODO: Separate upsertion.
@@ -41,9 +33,16 @@ defmodule Feder.Auth.Access do
     |> Repo.one()
   end
 
-  @spec token_key() :: atom
-  def token_key, do: @token_key
+  @spec token_key :: :access_token
+  def token_key, do: :access_token
 
-  @spec token_cookie() :: Keyword.t()
-  def token_cookie, do: @token_cookie
+  @spec token_cookie :: Keyword.t()
+  def token_cookie do
+    [
+      name: "_#{token_key()}",
+      sign: true,
+      max_age: 365 * 60 * 24 * 60,
+      same_site: "Lax"
+    ]
+  end
 end

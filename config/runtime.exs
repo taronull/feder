@@ -34,7 +34,6 @@ if config_env() == :prod do
   config :feder, Feder.Mailer,
     adapter: Swoosh.Adapters.AmazonSES,
     region: "us-east-2",
-    # TODO: Have it here.
-    access_key: System.get_env("SES_ACCESS_KEY") || raise("SES_ACCESS_KEY is missing."),
+    access_key: "AKIAZM4E2LDLUDKPZLUV",
     secret: System.get_env("SES_SECRET_KEY") || raise("SES_SECRET_KEY is missing.")
 end

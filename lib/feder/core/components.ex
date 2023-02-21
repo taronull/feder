@@ -168,13 +168,11 @@ defmodule Feder.Core.Components do
 
   def tickle, do: "hover:contrast-[.90] active:opacity-[.75]"
 
-  defp maybe_field(%{field: {f, field}} = assigns) do
+  defp maybe_field(%{field: {form, field}} = assigns) do
     assigns
-    # TODO: Why `nil` here?
-    # |> assign(field: nil)
-    |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(f, field) end)
-    |> assign_new(:name, fn -> Phoenix.HTML.Form.input_name(f, field) end)
-    |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(f, field) end)
+    |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(form, field) end)
+    |> assign_new(:name, fn -> Phoenix.HTML.Form.input_name(form, field) end)
+    |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(form, field) end)
   end
 
   defp maybe_field(assigns), do: assigns
