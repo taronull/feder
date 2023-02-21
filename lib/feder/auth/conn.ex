@@ -1,7 +1,8 @@
 defmodule Feder.Auth.Conn do
   use Feder, :conn
 
-  alias Feder.Auth.{Access, OAuth}
+  alias Feder.Auth.Access
+  alias Feder.OAuth
 
   @doc """
   Signs account in with JWT.

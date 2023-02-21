@@ -3,9 +3,10 @@
 import Config
 
 config :feder,
-  ecto_repos: [Feder.Repo],
-  # TODO: Separate into a module config.
-  google_oauth_id: "445767527784-ff0vsts09jg62lqpbfak3vri3vo5qagf.apps.googleusercontent.com"
+  ecto_repos: [Feder.Repo]
+
+config :feder, Feder.OAuth,
+  id: "445767527784-ff0vsts09jg62lqpbfak3vri3vo5qagf.apps.googleusercontent.com"
 
 config :feder, Feder.Storage,
   key: "K005H09LU8UztzmXJw5PuNPc0v/AdjQ",
@@ -21,6 +22,8 @@ config :feder, Feder.Endpoint,
     formats: [html: Feder.Core.Error, json: Feder.Core.Error],
     layout: false
   ]
+
+config :tesla, adapter: {Tesla.Adapter.Finch, name: Feder.Finch}
 
 config :esbuild,
   version: "0.14.41",

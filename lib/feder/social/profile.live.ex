@@ -45,6 +45,8 @@ defmodule Feder.Social.Profile.Live do
         Create Profile
       </.button>
     </.form>
+
+    <img src="/storage/4bdc0cc0-bb6e-40fe-bd5a-2bb8de0d7d33" alt="" />
     """
   end
 
@@ -52,7 +54,7 @@ defmodule Feder.Social.Profile.Live do
     consume_uploaded_entries(socket, :image, fn %{path: path}, _entry ->
       with {:ok, thumbnail} <- Image.thumbnail(path, 800),
            {:ok, image} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
-        {:ok, Feder.Storage.upload(image, type: "image/jpeg")}
+        Feder.Storage.upload(image, type: "image/jpeg")
       end
     end)
 

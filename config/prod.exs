@@ -5,7 +5,7 @@ config :feder, Feder.Endpoint, cache_static_manifest: "priv/static/cache_manifes
 
 config :swoosh,
   api_client: Swoosh.ApiClient.Finch,
-  finch_name: Feder.HTTP
+  finch_name: Feder.Finch
 
 # Do not print debug messages in production.
 config :logger, level: :info

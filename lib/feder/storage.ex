@@ -1,50 +1,67 @@
 defmodule Feder.Storage do
   use Feder, :conn
+  use Tesla
 
-  alias Feder.HTTP
+  alias Tesla.Middleware
 
-  @auth_url "https://api.backblazeb2.com/b2api/v2/b2_authorize_account"
+  def get(conn, %{"path" => path}) do
+    with {:ok, %{status: 200, body: body}} <- download(path) do
+      send_resp(conn, 200, body)
+    end
+  end
 
-  def download(conn, %{"path" => path}) do
-    with %{"authorizationToken" => token, "downloadUrl" => download_url} <- authorize(),
-         env <- Application.get_env(:feder, __MODULE__),
-         url <- Path.join([download_url, "file", env[:bucket_name], path]),
-         auth <- {"Authorization", token},
-         {:ok, response} <- HTTP.request(:get, url, [auth]) do
-      send_resp(conn, 200, response.body)
+  defp download(path) do
+    with {:ok, %{status: 200, body: body}} <- authorize() do
+      [
+        {Middleware.BaseUrl, "#{body["downloadUrl"]}/file/#{env(:bucket_name)}"},
+        {Middleware.Headers, [{"Authorization", body["authorizationToken"]}]}
+      ]
+      |> Tesla.client()
+      |> Tesla.get(Path.join(path))
     end
   end
 
   def upload(file, opts \\ []) do
-    with %{"authorizationToken" => token, "uploadUrl" => url} <- get_upload_url(),
-         headers <- [
-           {"Authorization", token},
-           {"Content-Type", opts[:type] || "b2/x-auto"},
-           {"Content-Length", to_string(opts[:size] || byte_size(file))},
-           {"X-Bz-File-Name", URI.encode(opts[:name] || Ecto.UUID.generate())},
-           {"X-Bz-Content-Sha1", :crypto.hash(:sha, file) |> Base.encode16()}
-         ],
-         {:ok, response} <- HTTP.request(:post, url, headers, file) do
-      Jason.decode!(response.body)
+    with {:ok, %{status: 200, body: body}} <- get_upload_url() do
+      headers = [
+        {"Authorization", body["authorizationToken"]},
+        {"Content-Type", opts[:type] || "b2/x-auto"},
+        {"Content-Length", byte_size(file) |> to_string()},
+        {"X-Bz-File-Name", Ecto.UUID.generate()},
+        {"X-Bz-Content-Sha1", :crypto.hash(:sha, file) |> Base.encode16()}
+      ]
+
+      [
+        {Middleware.Headers, headers},
+        Middleware.JSON
+      ]
+      |> Tesla.client()
+      |> Tesla.post(body["uploadUrl"], file)
     end
   end
 
-  defp get_upload_url() do
-    with %{"authorizationToken" => token, "apiUrl" => api_url} <- authorize(),
-         url <- Path.join([api_url, "b2api", "v2", "b2_get_upload_url"]),
-         auth <- {"Authorization", token},
-         env <- Application.get_env(:feder, __MODULE__),
-         body <- Jason.encode!(%{bucketId: env[:bucket_id]}),
-         {:ok, response} <- HTTP.request(:post, url, [auth], body) do
-      Jason.decode!(response.body)
+  defp get_upload_url do
+    with {:ok, %{status: 200, body: body}} <- authorize() do
+      [
+        {Middleware.BaseUrl, body["apiUrl"] <> "/b2api/v2"},
+        {Middleware.Headers, [{"Authorization", body["authorizationToken"]}]},
+        Middleware.JSON
+      ]
+      |> Tesla.client()
+      |> Tesla.post("b2_get_upload_url", %{bucketId: env(:bucket_id)})
     end
   end
 
-  defp authorize() do
-    with env <- Application.get_env(:feder, __MODULE__),
-         auth <- {"Authorization", "Basic #{Base.encode64("#{env[:key_id]}:#{env[:key]}")}"},
-         {:ok, response} <- HTTP.request(:get, @auth_url, [auth]) do
-      Jason.decode!(response.body)
-    end
+  defp authorize do
+    [
+      {Middleware.BaseUrl, "https://api.backblazeb2.com/b2api/v2"},
+      {Middleware.BasicAuth, username: env(:key_id), password: env(:key)},
+      Middleware.JSON
+    ]
+    |> Tesla.client()
+    |> Tesla.get("b2_authorize_account")
   end
+
+  defp env, do: Application.get_env(:feder, __MODULE__)
+  defp env(key), do: env() |> Keyword.get(key)
 end
