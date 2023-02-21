@@ -31,6 +31,7 @@ defmodule Feder.Mix do
       {:gen_smtp, "~> 1.0"},
       {:gettext, "~> 0.20"},
       {:heroicons, "~> 0.5"},
+      {:image, "~> 0.24.0"},
       {:jason, "~> 1.2"},
       {:joken, "~> 2.5"},
       {:phoenix, "~> 1.7.0-rc.2", override: true},

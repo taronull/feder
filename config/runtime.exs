@@ -29,7 +29,7 @@ if config_env() == :prod do
     ],
     secret_key_base: System.get_env("SECRET_KEY_BASE") || raise("SECRET_KEY_BASE is missing.")
 
-  # SSL relies on Fly.io.
+  # SSL is set from deployment.
 
   config :feder, Feder.Mailer,
     adapter: Swoosh.Adapters.AmazonSES,

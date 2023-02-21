@@ -2,10 +2,12 @@ defmodule Feder.Auth.OAuth do
   @google_certs_url "https://www.googleapis.com/oauth2/v3/certs"
   @issuer "https://accounts.google.com"
 
+  alias Feder.HTTP
+
   @spec verify(String.t()) :: {:ok, payload :: map}
   def verify(token) do
     with {:ok, %{"kid" => key_id, "alg" => algorithm}} <- Joken.peek_header(token),
-         {:ok, response} <- Finch.build(:get, @google_certs_url) |> Finch.request(Feder.Finch),
+         {:ok, response} <- HTTP.request(:get, @google_certs_url),
          %{"keys" => keys} <- Jason.decode!(response.body),
          key <- keys |> Enum.find(&(&1["kid"] == key_id)),
          signer <- Joken.Signer.create(algorithm, key),

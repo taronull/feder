@@ -7,7 +7,7 @@ defmodule Feder.Application do
       Feder.Telemetry,
       Feder.Repo,
       {Phoenix.PubSub, name: Feder.PubSub},
-      {Finch, name: Feder.Finch},
+      {Finch, name: Feder.HTTP},
       Feder.Endpoint
       # Start a worker by calling: Feder.Worker.start_link(arg)
       # {Feder.Worker, arg}
