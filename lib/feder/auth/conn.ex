@@ -8,14 +8,13 @@ defmodule Feder.Auth.Conn do
   Signs account in with JWT.
   """
   def sign_in(conn, params) do
-    with conn <- fetch_cookies(conn),
-         true <- conn.cookies["g_csrf_token"] == params["g_csrf_token"],
-         {:ok, %{"email" => email}} <- OAuth.verify(params["credential"]),
-         %{token: token} <- Access.grant(email),
-         cookie_name <- Access.token_cookie() |> Keyword.get(:name),
-         cookie_opts <- Access.token_cookie() |> Keyword.drop([:name]) do
+    with {:ok, conn} <- fetch_cookies(conn) |> check_csrf_token(params),
+         {:ok, payload} <- OAuth.verify(params["credential"]) do
+      %{token: token} = Access.grant(payload["email"])
+      %{name: name, opts: opts} = Access.token_cookie()
+
       conn
-      |> put_resp_cookie(cookie_name, token, cookie_opts)
+      |> put_resp_cookie(name, token, opts)
       |> redirect(to: ~p"/")
     end
   end
@@ -24,17 +23,35 @@ defmodule Feder.Auth.Conn do
   Signs the account out. Clears all session data.
   """
   def sign_out(conn, _params) do
-    with conn <- fetch_session(conn),
-         token <- get_session(conn, Access.token_key()),
-         socket <- get_session(conn, :live_socket_id) do
-      Access.delete_by_token(token)
-      Feder.Endpoint.broadcast(socket, "disconnect", %{})
+    conn
+    |> fetch_session()
+    |> invalidate_token()
+    |> sever_live_socket()
+    |> configure_session(renew: true)
+    |> clear_session()
+    |> delete_resp_cookie(Access.token_cookie()[:name])
+    |> redirect(to: ~p"/")
+  end
 
-      conn
-      |> configure_session(renew: true)
-      |> clear_session()
-      |> delete_resp_cookie(Access.token_cookie()[:name])
-      |> redirect(to: ~p"/")
+  defp check_csrf_token(conn, params) do
+    if conn.cookies["g_csrf_token"] == params["g_csrf_token"] do
+      {:ok, conn}
+    else
+      {:error, :invalid_token}
     end
+  end
+
+  defp invalidate_token(conn) do
+    token = get_session(conn, Access.token_key())
+    Access.delete_by_token(token)
+
+    conn
+  end
+
+  defp sever_live_socket(conn) do
+    socket_id = get_session(conn, :live_socket_id)
+    Feder.Endpoint.broadcast(socket_id, "disconnect", %{})
+
+    conn
   end
 end

@@ -25,6 +25,7 @@ defmodule Feder.Router do
       live "/account", Auth.Account.Live
 
       live "/profile", Social.Profile.Live
+      live "/:profile_name", Journal.Live
     end
   end
 

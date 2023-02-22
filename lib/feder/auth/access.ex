@@ -25,9 +25,9 @@ defmodule Feder.Auth.Access do
   @spec grant(String.t()) :: %Access.Entity{}
   def grant(email) do
     # TODO: Separate upsertion.
-    with account <- Account.get_by_email(email) || Account.insert!(%{email: email}) do
-      insert!(%{account_id: account.id})
-    end
+    account = Account.get_by_email(email) || Account.insert!(%{email: email})
+
+    insert!(%{account_id: account.id})
   end
 
   @spec insert!(map) :: %Access.Entity{}
@@ -55,13 +55,18 @@ defmodule Feder.Auth.Access do
   @spec token_key :: :access_token
   def token_key, do: :access_token
 
-  @spec token_cookie :: Keyword.t()
+  @spec token_cookie :: %{
+          name: String.t(),
+          opts: Keyword.t()
+        }
   def token_cookie do
-    [
+    %{
       name: "_#{token_key()}",
-      sign: true,
-      max_age: 365 * 60 * 24 * 60,
-      same_site: "Lax"
-    ]
+      opts: [
+        sign: true,
+        max_age: 365 * 60 * 24 * 60,
+        same_site: "Lax"
+      ]
+    }
   end
 end
