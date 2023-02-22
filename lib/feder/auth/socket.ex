@@ -29,10 +29,10 @@ defmodule Feder.Auth.Socket do
   end
 
   defp access_account(session, socket) do
-    if token = session["#{Access.token_key()}"] do
-      assign_new(socket, Account.id_key(), fn -> Access.get_account_id_by_token(token) end)
-    else
-      assign_new(socket, Account.id_key(), fn -> nil end)
-    end
+    assign_new(socket, Account.id_key(), fn ->
+      if token = session["#{Access.token_key()}"] do
+        Access.get_account_id_by_token(token)
+      end
+    end)
   end
 end
