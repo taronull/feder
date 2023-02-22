@@ -36,6 +36,13 @@ defmodule Feder do
     end
   end
 
+  def socket do
+    quote do
+      import Phoenix.LiveView
+      import Phoenix.Component
+    end
+  end
+
   def conn do
     quote do
       use Phoenix.Controller, layouts: [html: Feder.Core.Layouts]

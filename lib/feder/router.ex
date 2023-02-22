@@ -18,10 +18,12 @@ defmodule Feder.Router do
   scope "/", Feder do
     pipe_through :browser
 
-    live_session :auth, on_mount: Feder.Auth.Socket do
+    live_session :welcome, on_mount: {Feder.Auth.Socket, :redirect_account} do
       live "/", Core.Home.Live
-
       live "/access", Auth.Access.Live
+    end
+
+    live_session :user, on_mount: {Feder.Auth.Socket, :require_account} do
       live "/account", Auth.Account.Live
 
       live "/profile", Social.Profile.Live
