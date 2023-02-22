@@ -1,6 +1,8 @@
 defmodule Feder.Auth.Access.Live do
   use Feder, :live
 
+  alias Feder.Auth.Access
+
   def render(assigns) do
     ~H"""
     <.form for={:account} phx-submit="mail_access" class="space-y-4">
@@ -16,7 +18,7 @@ defmodule Feder.Auth.Access.Live do
   end
 
   def handle_event("mail_access", %{"email" => email}, socket) do
-    Feder.Auth.mail_access(email)
+    Access.mail(email)
 
     socket
     |> put_flash(:info, "Check your email")

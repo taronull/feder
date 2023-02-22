@@ -1,7 +1,26 @@
 defmodule Feder.Auth.Access do
+  use Feder, :routes
+
   alias Feder.Repo
   alias Feder.Auth.Account
   alias __MODULE__
+
+  @doc """
+  Sends an email with an access token to `account`.
+  """
+  @spec mail(String.t()) :: {:ok, term} | {:error, term}
+  def mail(email) do
+    with access <- Access.grant(email) do
+      Feder.Mailer.post(email, %{
+        title: "Sign in with your email",
+        body: """
+        Sign in with your account by visiting the URL below:
+        #{url(~p"/?#{Access.token_key()}=") <> Base.url_encode64(access.token)}
+        If you didn't request for this, please ignore this.
+        """
+      })
+    end
+  end
 
   @spec grant(String.t()) :: %Access.Entity{}
   def grant(email) do

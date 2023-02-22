@@ -10,7 +10,7 @@ defmodule Feder.Mailer do
           body: String.t()
         }
 
-  @spec post(String.t(), letter) :: {:ok, any} | {:error, any}
+  @spec post(String.t(), letter) :: {:ok, term} | {:error, term}
   def post(recipient, letter) do
     new()
     |> to(recipient)
