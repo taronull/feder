@@ -45,16 +45,14 @@ defmodule Feder.Social.Profile.Live do
         Create Profile
       </.button>
     </.form>
-
-    <img src="/storage/4bdc0cc0-bb6e-40fe-bd5a-2bb8de0d7d33" alt="" />
     """
   end
 
   def handle_event("create_profile", _params, socket) do
     consume_uploaded_entries(socket, :image, fn %{path: path}, _entry ->
       with {:ok, thumbnail} <- Image.thumbnail(path, 800),
-           {:ok, image} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
-        Feder.Storage.upload(image, type: "image/jpeg")
+           {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
+        Feder.Storage.upload("/profile/image/#{Ecto.UUID.generate()}", file)
       end
     end)
 

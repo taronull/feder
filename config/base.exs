@@ -9,10 +9,7 @@ config :feder, Feder.OAuth,
   id: "445767527784-ff0vsts09jg62lqpbfak3vri3vo5qagf.apps.googleusercontent.com"
 
 config :feder, Feder.Storage,
-  key: "K005H09LU8UztzmXJw5PuNPc0v/AdjQ",
-  key_id: "005a9f84557c67c0000000005",
-  bucket_id: "dae9af78545575078c66071c",
-  bucket_name: "feder-dev"
+  secret: "6tnOUH/TdAhmzLzHfkoM5JArx7hSFJUtycSZiy/qqaR2YyQE8BDEL01woUQEmWkx"
 
 config :feder, Feder.Endpoint,
   url: [host: "localhost"],
