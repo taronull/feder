@@ -5,7 +5,7 @@ defmodule Feder.Auth.Access.Live do
 
   def render(assigns) do
     ~H"""
-    <.form for={:account} phx-submit="mail_access" class="space-y-4">
+    <.form for={%{}} as={:account} phx-submit="mail_access" class="space-y-4">
       <.heading>Continue with Email</.heading>
 
       <.input name="email" type="email" placeholder="Your email" />
