@@ -4,23 +4,26 @@ defmodule Feder.Auth.AccountID.Test do
   alias Feder.Auth.{Access, AccountID, Fixtures}
 
   setup %{conn: conn} do
-    with conn <- %{conn | secret_key_base: @endpoint.config(:secret_key_base)},
-         conn <-
-           Plug.run(conn, [
-             {Plug.Session, @endpoint.session()},
-             {Plug.Parsers, @endpoint.parsers()},
-             &Plug.Conn.fetch_session(&1)
-           ]) do
-      %{access: Fixtures.access(), conn: conn}
-    end
+    conn =
+      conn
+      |> Map.put(:secret_key_base, @endpoint.config(:secret_key_base))
+      |> Plug.run([
+        {Plug.Session, @endpoint.session()},
+        {Plug.Parsers, @endpoint.parsers()},
+        &Plug.Conn.fetch_session(&1)
+      ])
+
+    %{access: Fixtures.access(), conn: conn}
   end
 
   describe "access_account(conn, :session)" do
     setup %{access: access, conn: conn} do
-      with conn <- put_session(conn, Access.token_key(), access.token),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        %{conn: conn}
-      end
+      conn =
+        conn
+        |> put_session(Access.token_key(), access.token)
+        |> Plug.run([{AccountID, []}])
+
+      %{conn: conn}
     end
 
     test "assigns account ID", %{access: access, conn: conn} do
@@ -30,12 +33,14 @@ defmodule Feder.Auth.AccountID.Test do
 
   describe "access_account(conn, :cookies)" do
     setup %{access: access, conn: conn} do
-      with cookie_name <- Access.token_cookie() |> Keyword.get(:name),
-           cookie_opts <- Access.token_cookie() |> Keyword.drop([:name]),
-           conn <- put_resp_cookie(conn, cookie_name, access.token, cookie_opts),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        %{conn: conn}
-      end
+      %{name: name, opts: opts} = Access.token_cookie()
+
+      conn =
+        conn
+        |> put_resp_cookie(name, access.token, opts)
+        |> Plug.run([{AccountID, []}])
+
+      %{conn: conn}
     end
 
     test "assigns account ID", %{access: access, conn: conn} do
@@ -49,11 +54,13 @@ defmodule Feder.Auth.AccountID.Test do
 
   describe "access_account(conn, :params)" do
     setup %{access: access, conn: conn} do
-      with encoded_token <- Base.url_encode64(access.token),
-           conn <- put_in(conn.params["#{Access.token_key()}"], encoded_token),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        %{conn: conn}
-      end
+      encoded_token = Base.url_encode64(access.token)
+
+      conn =
+        put_in(conn.params["#{Access.token_key()}"], encoded_token)
+        |> Plug.run([{AccountID, []}])
+
+      %{conn: conn}
     end
 
     test "assigns account ID", %{access: access, conn: conn} do
@@ -65,7 +72,7 @@ defmodule Feder.Auth.AccountID.Test do
     end
 
     test "stores token in cookies", %{access: access, conn: conn} do
-      assert conn.cookies[Access.token_cookie()[:name]] == access.token
+      assert conn.cookies[Access.token_cookie(:name)] == access.token
     end
   end
 
@@ -75,33 +82,39 @@ defmodule Feder.Auth.AccountID.Test do
     end
 
     test "assigns nil for no token", %{conn: conn} do
-      with conn <- Plug.run(conn, [{AccountID, []}]) do
-        refute conn.assigns.account_id
-      end
+      conn = Plug.run(conn, [{AccountID, []}])
+
+      refute conn.assigns.account_id
     end
 
     test "assigns nil for wrong session token", %{conn: conn, wrong_token: wrong_token} do
-      with conn <- put_session(conn, Access.token_key(), wrong_token),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        refute conn.assigns.account_id
-      end
+      conn =
+        conn
+        |> put_session(Access.token_key(), wrong_token)
+        |> Plug.run([{AccountID, []}])
+
+      refute conn.assigns.account_id
     end
 
     test "assigns nil for wrong token cookie", %{conn: conn, wrong_token: wrong_token} do
-      with cookie_name <- Access.token_cookie() |> Keyword.get(:name),
-           cookie_opts <- Access.token_cookie() |> Keyword.drop([:name]),
-           conn <- put_resp_cookie(conn, cookie_name, wrong_token, cookie_opts),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        refute conn.assigns.account_id
-      end
+      %{name: name, opts: opts} = Access.token_cookie()
+
+      conn =
+        conn
+        |> put_resp_cookie(name, wrong_token, opts)
+        |> Plug.run([{AccountID, []}])
+
+      refute conn.assigns.account_id
     end
 
     test "assigns nil for wrong token parameter", %{conn: conn, wrong_token: wrong_token} do
-      with encoded_wrong_token <- Base.url_encode64(wrong_token),
-           conn <- put_in(conn.params["#{Access.token_key()}"], encoded_wrong_token),
-           conn <- Plug.run(conn, [{AccountID, []}]) do
-        refute conn.assigns.account_id
-      end
+      encoded_wrong_token = Base.url_encode64(wrong_token)
+
+      conn =
+        put_in(conn.params["#{Access.token_key()}"], encoded_wrong_token)
+        |> Plug.run([{AccountID, []}])
+
+      refute conn.assigns.account_id
     end
   end
 end

@@ -39,7 +39,7 @@ defmodule Feder.Auth.AccountID do
   end
 
   defp access_account(conn, :cookies) do
-    with cookie_name <- Access.token_cookie() |> Keyword.get(:name),
+    with cookie_name <- Access.token_cookie(:name),
          conn <- fetch_cookies(conn, signed: [cookie_name]),
          token when is_binary(token) <- conn.cookies[cookie_name],
          id when is_integer(id) <- Access.get_account_id_by_token(token) do
@@ -56,8 +56,8 @@ defmodule Feder.Auth.AccountID do
     with encoded_token when is_binary(encoded_token) <- conn.params["#{Access.token_key()}"],
          {:ok, token} when is_binary(token) <- Base.url_decode64(encoded_token),
          id when is_integer(id) <- Access.get_account_id_by_token(token),
-         cookie_name <- Access.token_cookie() |> Keyword.get(:name),
-         cookie_opts <- Access.token_cookie() |> Keyword.drop([:name]) do
+         cookie_name <- Access.token_cookie(:name),
+         cookie_opts <- Access.token_cookie(:opts) do
       conn
       |> put_resp_cookie(cookie_name, token, cookie_opts)
       |> put_session(:live_socket_id, encoded_token)

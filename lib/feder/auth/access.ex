@@ -69,4 +69,6 @@ defmodule Feder.Auth.Access do
       ]
     }
   end
+
+  def token_cookie(key), do: token_cookie() |> Map.get(key)
 end

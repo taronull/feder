@@ -29,7 +29,7 @@ defmodule Feder.Auth.Conn do
     |> sever_live_socket()
     |> configure_session(renew: true)
     |> clear_session()
-    |> delete_resp_cookie(Access.token_cookie()[:name])
+    |> delete_resp_cookie(Access.token_cookie().name)
     |> redirect(to: ~p"/")
   end
 
