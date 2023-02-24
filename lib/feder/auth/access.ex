@@ -4,6 +4,16 @@ defmodule Feder.Auth.Access do
 
   alias Feder.Auth.Account
 
+  @token_key :access_token
+  @token_cookie %{
+    name: "_#{@token_key}",
+    opts: [
+      sign: true,
+      max_age: 365 * 60 * 24 * 60,
+      same_site: "Lax"
+    ]
+  }
+
   @doc """
   Sends an email with an access token to `account`.
   """
@@ -51,23 +61,14 @@ defmodule Feder.Auth.Access do
     |> Repo.one()
   end
 
-  @spec token_key :: :access_token
-  def token_key, do: :access_token
+  @spec token_key :: atom
+  def token_key, do: @token_key
 
   @spec token_cookie :: %{
           name: String.t(),
           opts: Keyword.t()
         }
-  def token_cookie do
-    %{
-      name: "_#{token_key()}",
-      opts: [
-        sign: true,
-        max_age: 365 * 60 * 24 * 60,
-        same_site: "Lax"
-      ]
-    }
-  end
+  def token_cookie, do: @token_cookie
 
   def token_cookie(key), do: token_cookie() |> Map.get(key)
 end
