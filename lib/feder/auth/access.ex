@@ -1,9 +1,8 @@
 defmodule Feder.Auth.Access do
+  use Feder, :model
   use Feder, :routes
 
-  alias Feder.Repo
   alias Feder.Auth.Account
-  alias __MODULE__
 
   @doc """
   Sends an email with an access token to `account`.

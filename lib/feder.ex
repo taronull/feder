@@ -62,6 +62,13 @@ defmodule Feder do
     end
   end
 
+  def model do
+    quote do
+      alias Feder.Repo
+      alias __MODULE__
+    end
+  end
+
   def entity do
     quote do
       use Ecto.Schema

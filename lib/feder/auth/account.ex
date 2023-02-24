@@ -1,7 +1,5 @@
 defmodule Feder.Auth.Account do
-  alias Feder.Repo
-  alias __MODULE__
-
+  use Feder, :model
   @spec insert!(map) :: %Account.Entity{}
   def insert!(attrs) do
     %Account.Entity{}
