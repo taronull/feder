@@ -5,15 +5,15 @@ defmodule Feder.Auth.Account.Test do
   alias Feder.Auth.Account
 
   setup do
-    %{account: Account.insert!(%{email: Fixtures.email()})}
+    %{account: Fixtures.account()}
   end
 
-  describe "insert!/1" do
+  describe "insert/1" do
     test "creates account with unique email", %{account: account} do
-      assert %Account.Entity{} = Account.insert!(%{email: Fixtures.email()})
+      assert {:ok, %Account.Entity{}} = Account.insert(%{email: Fixtures.email()})
 
       assert_raise Ecto.InvalidChangesetError, fn ->
-        Account.insert!(%{email: account.email})
+        Account.insert(%{email: account.email})
       end
     end
   end

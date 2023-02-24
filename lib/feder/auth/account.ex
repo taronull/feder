@@ -3,11 +3,11 @@ defmodule Feder.Auth.Account do
 
   @id_key :account_id
 
-  @spec insert!(map) :: %Account.Entity{}
-  def insert!(attrs) do
+  @spec insert(map) :: %Account.Entity{}
+  def insert(attrs) do
     %Account.Entity{}
     |> Account.Entity.changeset(attrs)
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   @spec get_by_email(String.t()) :: %Account.Entity{} | nil

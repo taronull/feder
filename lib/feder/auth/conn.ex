@@ -9,8 +9,8 @@ defmodule Feder.Auth.Conn do
   """
   def sign_in(conn, params) do
     with {:ok, conn} <- fetch_cookies(conn) |> check_csrf_token(params),
-         {:ok, payload} <- OAuth.verify(params["credential"]) do
-      %{token: token} = Access.grant(payload["email"])
+         {:ok, payload} <- OAuth.verify(params["credential"]),
+         {:ok, %{token: token}} <- Access.grant(payload["email"]) do
       %{name: name, opts: opts} = Access.token_cookie()
 
       conn

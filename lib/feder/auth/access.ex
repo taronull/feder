@@ -34,16 +34,25 @@ defmodule Feder.Auth.Access do
   @spec grant(String.t()) :: %Access.Entity{}
   def grant(email) do
     # TODO: Separate upsertion.
-    account = Account.get_by_email(email) || Account.insert!(%{email: email})
 
-    insert!(%{account_id: account.id})
+    account =
+      if account = Account.get_by_email(email) do
+        account
+      else
+        case Account.insert(%{email: email}) do
+          {:ok, account} -> account
+          {:error, _} -> nil
+        end
+      end
+
+    insert(%{account_id: account.id})
   end
 
-  @spec insert!(map) :: %Access.Entity{}
-  def insert!(attrs) do
+  @spec insert(map) :: %Access.Entity{}
+  def insert(attrs) do
     %Access.Entity{}
     |> Access.Entity.changeset(attrs)
-    |> Repo.insert!()
+    |> Repo.insert()
   end
 
   @spec delete_by_token(binary) :: count :: integer
