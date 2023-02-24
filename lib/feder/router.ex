@@ -21,12 +21,11 @@ defmodule Feder.Router do
     live_session :welcome, on_mount: {Feder.Auth.Socket, :redirect_account} do
       live "/", Core.Home.Live
       live "/access", Auth.Access.Live
+      live "/profile", Social.Profile.Live
     end
 
     live_session :user, on_mount: {Feder.Auth.Socket, :require_account} do
       live "/account", Auth.Account.Live
-
-      live "/profile", Social.Profile.Live
       live "/:profile_name", Journal.Live
     end
   end

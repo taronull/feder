@@ -1,7 +1,8 @@
 defmodule Feder.Auth.Conn do
   use Feder, :conn
 
-  alias Feder.Auth.Access
+  alias Feder.Auth
+  alias Feder.Auth.{Access, Account}
   alias Feder.OAuth
 
   @doc """
@@ -10,12 +11,20 @@ defmodule Feder.Auth.Conn do
   def sign_in(conn, params) do
     with {:ok, conn} <- fetch_cookies(conn) |> check_csrf_token(params),
          {:ok, payload} <- OAuth.verify(params["credential"]),
-         {:ok, %{token: token}} <- Access.grant(payload["email"]) do
+         {:ok, account} <- ensure_account(payload),
+         {:ok, access} <- Access.insert(%{account_id: account.id}) do
       %{name: name, opts: opts} = Access.token_cookie()
 
       conn
-      |> put_resp_cookie(name, token, opts)
+      |> put_resp_cookie(name, access.token, opts)
       |> redirect(to: ~p"/")
+    end
+  end
+
+  defp ensure_account(%{"email" => email, "given_name" => name, "picture" => image}) do
+    case Account.get_by_email(email) do
+      %Account.Entity{} = account -> {:ok, account}
+      _ -> Auth.register(email, name, image)
     end
   end
 
