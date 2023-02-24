@@ -3,7 +3,7 @@ defmodule Feder.Auth.Account do
 
   @id_key :account_id
 
-  @spec insert(map) :: %Account.Entity{}
+  @spec insert(map) :: {:ok, %Account.Entity{}} | {:error, Ecto.Changeset.t()}
   def insert(attrs) do
     %Account.Entity{}
     |> Account.Entity.changeset(attrs)

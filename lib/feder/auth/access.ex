@@ -19,7 +19,7 @@ defmodule Feder.Auth.Access do
   """
   @spec mail(String.t()) :: {:ok, term} | {:error, term}
   def mail(email) do
-    with access <- Access.grant(email) do
+    with {:ok, access} <- Access.grant(email) do
       Feder.Mailer.post(email, %{
         title: "Sign in with your email",
         body: """
@@ -31,7 +31,7 @@ defmodule Feder.Auth.Access do
     end
   end
 
-  @spec grant(String.t()) :: %Access.Entity{}
+  @spec grant(String.t()) :: {:ok, %Access.Entity{}} | {:error, Ecto.Changeset.t()}
   def grant(email) do
     # TODO: Separate upsertion.
 
@@ -48,7 +48,7 @@ defmodule Feder.Auth.Access do
     insert(%{account_id: account.id})
   end
 
-  @spec insert(map) :: %Access.Entity{}
+  @spec insert(map) :: {:ok, %Access.Entity{}} | {:error, Ecto.Changeset.t()}
   def insert(attrs) do
     %Access.Entity{}
     |> Access.Entity.changeset(attrs)
