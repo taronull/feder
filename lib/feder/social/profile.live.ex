@@ -3,8 +3,9 @@ defmodule Feder.Social.Profile.Live do
 
   alias Feder.Social.Profile.Entity
 
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     socket
+    |> assign(email: params["email"])
     |> assign(changeset: to_form(Entity.changeset(%Entity{}, %{})))
     |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))
     |> then(&{:ok, &1})
@@ -21,6 +22,8 @@ defmodule Feder.Social.Profile.Live do
     >
       <.heading>Create Your Profile</.heading>
 
+      <code><%= @email %></code>
+
       <label
         for={@uploads.image.ref}
         phx-drop-target={@uploads.image.ref}
@@ -33,9 +36,9 @@ defmodule Feder.Social.Profile.Live do
       >
         <.live_file_input upload={@uploads.image} class="hidden" />
         <%= if entry = List.first(@uploads.image.entries) do %>
-          <.live_img_preview entry={entry} />
+          <.live_img_preview class="min-w-full min-h-full object-cover" entry={entry} />
         <% else %>
-          <Heroicons.photo class="h-12" />
+          <Heroicons.photo class="h-8" />
         <% end %>
       </label>
 
@@ -48,17 +51,25 @@ defmodule Feder.Social.Profile.Live do
     """
   end
 
-  def handle_event("create_profile", _params, socket) do
-    consume_uploaded_entries(socket, :image, fn %{path: path}, _entry ->
-      with {:ok, thumbnail} <- Image.thumbnail(path, 800),
-           {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
-        Feder.Storage.upload("/profile/image/#{Ecto.UUID.generate()}", file)
-      end
-    end)
-
-    {:noreply, socket}
-  end
-
   # `live_file_input` requires a `change` handler.
   def handle_event("noop", _, socket), do: {:noreply, socket}
+
+  def handle_event("create_profile", %{"name" => name}, socket) do
+    with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(%{}),
+         {:ok, _} <- Feder.Auth.register(socket.assigns.email, name, Map.get(image, :url)),
+         {:ok, _} <- Feder.Auth.mail(socket.assigns.email) do
+      socket
+      |> put_flash(:info, "Check your email")
+      |> redirect(to: "/")
+      |> then(&{:noreply, &1})
+    end
+  end
+
+  defp upload(%{path: path}, _entry) do
+    with {:ok, thumbnail} <- Image.thumbnail(path, 800),
+         {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
+      Feder.Storage.upload("/profile/image/#{Ecto.UUID.generate()}", file)
+      |> dbg()
+    end
+  end
 end
