@@ -34,7 +34,7 @@ defmodule Feder.Mix do
       {:image, "~> 0.24.0"},
       {:jason, "~> 1.2"},
       {:joken, "~> 2.5"},
-      {:phoenix, "~> 1.7.0-rc.2", override: true},
+      {:phoenix, "~> 1.7.0"},
       {:phoenix_ecto, "~> 4.4"},
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_dashboard, "~> 0.7.2"},
