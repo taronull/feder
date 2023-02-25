@@ -3,17 +3,8 @@ defmodule Feder.Auth.AccountID.Test do
 
   alias Feder.Auth.{Access, AccountID, Fixtures}
 
-  setup %{conn: conn} do
-    conn =
-      conn
-      |> Map.put(:secret_key_base, @endpoint.config(:secret_key_base))
-      |> Plug.run([
-        {Plug.Session, @endpoint.session()},
-        {Plug.Parsers, @endpoint.parsers()},
-        &Plug.Conn.fetch_session(&1)
-      ])
-
-    %{access: Fixtures.access(), conn: conn}
+  setup do
+    %{access: Fixtures.access()}
   end
 
   describe "access_account(conn, :session)" do

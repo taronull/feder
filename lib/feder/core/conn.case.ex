@@ -5,6 +5,8 @@ defmodule Feder.Core.Conn.Case do
 
   use ExUnit.CaseTemplate
 
+  @endpoint Feder.Endpoint
+
   using do
     quote do
       use Feder, :routes
@@ -18,6 +20,19 @@ defmodule Feder.Core.Conn.Case do
   setup tags do
     Feder.Core.Data.Case.sandbox(tags)
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    conn =
+      Phoenix.ConnTest.build_conn()
+      |> Map.put(:secret_key_base, @endpoint.config(:secret_key_base))
+      |> Plug.run(plugs())
+
+    {:ok, conn: conn}
+  end
+
+  defp plugs do
+    [
+      {Plug.Session, @endpoint.session()},
+      {Plug.Parsers, @endpoint.parsers()},
+      &Plug.Conn.fetch_session(&1)
+    ]
   end
 end

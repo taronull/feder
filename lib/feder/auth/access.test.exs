@@ -18,6 +18,7 @@ defmodule Feder.Auth.Access.Test do
   describe "delete_by_token/1" do
     test "deletes entity by token", %{access: access} do
       assert Access.delete_by_token(access.token) == 1
+      refute Repo.get(Access.Entity, access.id)
     end
   end
 
