@@ -2,7 +2,7 @@ defmodule Feder.Auth.Access.Live do
   use Feder, :live
 
   alias Feder.Auth
-  alias Feder.Auth.{Access, Account}
+  alias Feder.Auth.Account
 
   def mount(_params, _session, socket) do
     {:ok, assign(socket, :account?, nil)}
