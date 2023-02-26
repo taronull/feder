@@ -22,7 +22,12 @@ defmodule Feder.Core.Layouts do
         />
       </div>
       <.link href={~p"/account"}>
-        <%= @account_id %>
+        <.live_component
+          :if={@account_id}
+          module={ProfileImage}
+          id={@account_id}
+          account_id={@account_id}
+        />
       </.link>
     </header>
 

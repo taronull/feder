@@ -10,7 +10,7 @@ defmodule Feder.Auth.Account do
     |> Repo.insert()
   end
 
-  @spec get_by_email(String.t()) :: %Account.Entity{} | nil
+  @spec get_by_email(String.t()) :: nil | %Account.Entity{}
   def get_by_email(email) do
     Repo.get_by(Account.Entity, email: email)
   end

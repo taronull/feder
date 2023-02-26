@@ -23,20 +23,14 @@ defmodule Feder.Core.Home.Live do
       </article>
 
       <menu class="space-y-4">
-        <%= if @account_id do %>
-          <li>
-            <.link href={~p"/account"}><%= @account_id %></.link>
-          </li>
-        <% else %>
-          <li>
-            <.google_oauth />
-          </li>
-          <li>
-            <.link href={~p"/access"} class="block w-max">
-              <.button>Continue with Email</.button>
-            </.link>
-          </li>
-        <% end %>
+        <li>
+          <.google_oauth />
+        </li>
+        <li>
+          <.link href={~p"/access"} class="block w-max">
+            <.button>Continue with Email</.button>
+          </.link>
+        </li>
       </menu>
     </div>
     """

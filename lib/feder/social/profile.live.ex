@@ -38,7 +38,7 @@ defmodule Feder.Social.Profile.Live do
         <%= if entry = List.first(@uploads.image.entries) do %>
           <.live_img_preview class="min-w-full min-h-full object-cover" entry={entry} />
         <% else %>
-          <Heroicons.photo class="h-8" />
+          <Heroicons.photo class="h-8 stroke-1" />
         <% end %>
       </label>
 

@@ -8,6 +8,7 @@ defmodule Feder.Social.Profile do
     |> Repo.insert()
   end
 
+  @spec get_by_account_id(integer) :: nil | %Profile.Entity{}
   def get_by_account_id(account_id) do
     Repo.get_by(Profile.Entity, account_id: account_id)
   end
