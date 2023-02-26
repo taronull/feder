@@ -69,7 +69,6 @@ defmodule Feder.Social.Profile.Live do
     with {:ok, thumbnail} <- Image.thumbnail(path, 800),
          {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
       Feder.Storage.upload("/profile/image/#{Ecto.UUID.generate()}", file)
-      |> dbg()
     end
   end
 end
