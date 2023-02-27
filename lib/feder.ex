@@ -20,7 +20,7 @@ defmodule Feder do
   def component do
     quote do
       use Phoenix.LiveComponent
-
+      unquote(components())
       unquote(html())
     end
   end
@@ -42,6 +42,7 @@ defmodule Feder do
       import Feder.Core.Components
       import Feder.Auth.Components
       alias Feder.Social.ProfileImage
+      alias Feder.Social.ProfileEditor
     end
   end
 

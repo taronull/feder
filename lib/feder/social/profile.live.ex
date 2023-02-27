@@ -6,7 +6,7 @@ defmodule Feder.Social.Profile.Live do
   def mount(params, _session, socket) do
     socket
     |> assign(email: params["email"])
-    |> assign(changeset: to_form(Entity.changeset(%Entity{}, %{})))
+    |> assign(:changeset, to_form(Entity.changeset(%Entity{}, %{})))
     |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))
     |> then(&{:ok, &1})
   end

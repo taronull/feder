@@ -7,14 +7,14 @@ defmodule Feder.Social.ProfileImage do
   def update(assigns, socket) do
     profile = Profile.get_by_account_id(assigns.account_id)
 
-    {:ok, assign(socket, profile: profile)}
+    {:ok, assign(socket, :profile, profile)}
   end
 
   def render(assigns) do
     ~H"""
     <figure class={[
       tickle(),
-      "h-6 aspect-square rounded-full p-px border overflow-clip",
+      "border border-current p-px h-6 aspect-square rounded-full",
       "grid place-items-center"
     ]}>
       <%= if @profile.image do %>
