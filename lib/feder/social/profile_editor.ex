@@ -30,9 +30,9 @@ defmodule Feder.Social.ProfileEditor do
           for={@uploads.image.ref}
           phx-drop-target={@uploads.image.ref}
           class={[
-            theme(:invert),
+            theme(),
             tickle(),
-            "block h-24 aspect-square rounded-full overflow-clip",
+            "block border rounded-full h-24 aspect-square overflow-clip",
             "grid place-items-center"
           ]}
         >
