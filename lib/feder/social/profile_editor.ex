@@ -4,14 +4,12 @@ defmodule Feder.Social.ProfileEditor do
   alias Feder.Social.Profile
 
   def update(assigns, socket) do
-    form =
-      assigns.account_id
-      |> Profile.get_by_account_id()
-      |> Profile.cast()
-      |> to_form(as: "profile")
+    profile = Profile.get_by_account_id(assigns.id)
+    form = Profile.cast(profile) |> to_form(as: "profile")
 
     {:ok,
      socket
+     |> assign(:profile, profile)
      |> assign(:form, form)
      |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))}
   end
@@ -25,6 +23,7 @@ defmodule Feder.Social.ProfileEditor do
         phx-submit="edit_profile"
         phx-change="noop"
         class="space-y-4"
+        multipart
       >
         <label
           for={@uploads.image.ref}
@@ -36,11 +35,14 @@ defmodule Feder.Social.ProfileEditor do
             "grid place-items-center"
           ]}
         >
-          <.live_file_input upload={@uploads.image || @profile.image} class="hidden" />
-          <%= if entry = List.first(@uploads.image.entries) do %>
-            <.live_img_preview entry={entry} class="min-w-full min-h-full object-cover" />
-          <% else %>
-            <Heroicons.photo class="h-8 stroke-1" />
+          <.live_file_input upload={@uploads.image} class="hidden" />
+          <%= cond do %>
+            <% entry = List.first(@uploads.image.entries) -> %>
+              <.live_img_preview entry={entry} class="min-w-full min-h-full object-cover" />
+            <% image = @form.data.image -> %>
+              <img src={image} alt="Current profile image" />
+            <% true -> %>
+              <Heroicons.photo class="h-8 stroke-1" />
           <% end %>
         </label>
 
@@ -56,14 +58,12 @@ defmodule Feder.Social.ProfileEditor do
 
   def handle_event("noop", _, socket), do: {:noreply, socket}
 
-  def handle_event("edit_profile", params, socket) do
-    dbg(params)
-    {:noreply, socket}
-    # with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(%{}),
-    #      {:ok, _} <- Profile.update() do
-    #   socket
-    #   |> then(&{:noreply, &1})
-    # end
+  def handle_event("edit_profile", %{"profile" => profile}, socket) do
+    with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(),
+         profile <- if(image, do: Map.put(profile, "image", image.url), else: profile),
+         {:ok, _} <- Profile.update(socket.assigns.profile, profile) do
+      {:noreply, socket}
+    end
   end
 
   defp upload(%{path: path}, _entry) do

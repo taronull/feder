@@ -22,7 +22,7 @@ defmodule Feder.Auth.Account.Live do
 
       <section class="space-y-4">
         <.heading>Edit Profile</.heading>
-        <.live_component module={ProfileEditor} id={@account_id} account_id={@account_id} />
+        <.live_component module={ProfileEditor} id={@account_id} />
       </section>
     </div>
     """
