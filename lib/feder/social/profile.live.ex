@@ -51,7 +51,6 @@ defmodule Feder.Social.Profile.Live do
     """
   end
 
-  # `live_file_input` requires a `change` handler.
   def handle_event("noop", _, socket), do: {:noreply, socket}
 
   def handle_event("create_profile", %{"name" => name}, socket) do

@@ -131,29 +131,24 @@ defmodule Feder.Core.Components do
 
   ## Examples
 
-      <.input field={{f, :email}} type="email" />
-      <.input name="my-input" errors={["oh no!"]} />
+      <.input field={@form[:email]} />
+      <.input name="email" />
   """
-  attr :field, :any, doc: "a %Phoenix.HTML.Form{}/field name tuple, for example: {f, :email}"
-  attr :name, :string
+  attr :id, :any
+  attr :name, :any
+  attr :value, :any
+  attr :field, Phoenix.HTML.FormField
   attr :class, :list, default: []
   attr :rest, :global, include: ~w(autocomplete disabled form max maxlength min minlength
                                    pattern placeholder readonly required size step)
   slot :inner_block
 
   def input(assigns) do
-    with assigns <- maybe_field(assigns) do
-      ~H"""
-      <input
-        id={assigns[:id] || @name}
-        name={@name}
-        value={assigns[:value]}
-        phx-feedback-for={@name}
-        class={[theme(), text_box(), @class]}
-        {@rest}
-      />
-      """
-    end
+    assigns = maybe_field(assigns)
+
+    ~H"""
+    <input id={@id} name={@name} value={@value} class={[theme(), text_box(), @class]} {@rest} />
+    """
   end
 
   def theme(mode \\ :normal)
@@ -168,11 +163,11 @@ defmodule Feder.Core.Components do
 
   def tickle, do: "hover:contrast-[.90] active:opacity-[.75]"
 
-  defp maybe_field(%{field: {form, field}} = assigns) do
+  defp maybe_field(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
-    |> assign_new(:id, fn -> Phoenix.HTML.Form.input_id(form, field) end)
-    |> assign_new(:name, fn -> Phoenix.HTML.Form.input_name(form, field) end)
-    |> assign_new(:value, fn -> Phoenix.HTML.Form.input_value(form, field) end)
+    |> assign_new(:id, fn -> field.id end)
+    |> assign_new(:name, fn -> field.name end)
+    |> assign_new(:value, fn -> field.value end)
   end
 
   defp maybe_field(assigns), do: assigns

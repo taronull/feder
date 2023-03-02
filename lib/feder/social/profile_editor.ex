@@ -4,23 +4,26 @@ defmodule Feder.Social.ProfileEditor do
   alias Feder.Social.Profile
 
   def update(assigns, socket) do
-    profile = Profile.get_by_account_id(assigns.account_id)
+    form =
+      assigns.account_id
+      |> Profile.get_by_account_id()
+      |> Profile.cast()
+      |> to_form(as: "profile")
 
-    socket
-    |> assign(:form, to_form(Profile.Entity.changeset(profile, %{})))
-    |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))
-    |> then(&{:ok, &1})
+    {:ok,
+     socket
+     |> assign(:form, form)
+     |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))}
   end
 
   def render(assigns) do
     ~H"""
     <div class="container">
       <.form
-        :let={form}
-        for={@changeset}
+        for={@form}
+        phx-target={@myself}
         phx-submit="edit_profile"
         phx-change="noop"
-        phx-target={@myself}
         class="space-y-4"
       >
         <label
@@ -35,13 +38,13 @@ defmodule Feder.Social.ProfileEditor do
         >
           <.live_file_input upload={@uploads.image || @profile.image} class="hidden" />
           <%= if entry = List.first(@uploads.image.entries) do %>
-            <.live_img_preview class="min-w-full min-h-full object-cover" entry={entry} />
+            <.live_img_preview entry={entry} class="min-w-full min-h-full object-cover" />
           <% else %>
             <Heroicons.photo class="h-8 stroke-1" />
           <% end %>
         </label>
 
-        <.input field={{form, :name}} placeholder="Profile name" required />
+        <.input field={@form[:name]} placeholder="Profile name" required />
 
         <.button phx-disable-with>
           Edit Profile
@@ -51,12 +54,11 @@ defmodule Feder.Social.ProfileEditor do
     """
   end
 
-  # `live_file_input` requires a `change` handler.
   def handle_event("noop", _, socket), do: {:noreply, socket}
 
   def handle_event("edit_profile", params, socket) do
     dbg(params)
-    {:ok, socket}
+    {:noreply, socket}
     # with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(%{}),
     #      {:ok, _} <- Profile.update() do
     #   socket

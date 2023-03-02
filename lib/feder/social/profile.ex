@@ -3,19 +3,19 @@ defmodule Feder.Social.Profile do
 
   alias __MODULE__.Entity
 
-  @spec change(map) :: Ecto.Changeset.t()
-  def change(attrs) do
-    %Entity{} |> Entity.changeset(attrs)
+  @spec cast(%Entity{}, map) :: Ecto.Changeset.t()
+  def cast(%Entity{} = entity, attrs \\ %{}) do
+    Entity.changeset(entity, attrs)
   end
 
   @spec insert(map) :: {:ok, %Entity{}} | {:error, Ecto.Changeset.t()}
   def insert(attrs) do
-    change(attrs) |> Repo.insert()
+    cast(%Entity{}, attrs) |> Repo.insert()
   end
 
-  @spec update(map) :: {:ok, %Entity{}} | {:error, Ecto.Changeset.t()}
-  def update(attrs) do
-    change(attrs) |> Repo.update()
+  @spec update(%Entity{}, map) :: {:ok, %Entity{}} | {:error, Ecto.Changeset.t()}
+  def update(%Entity{} = entity, attrs) do
+    cast(entity, attrs) |> Repo.update()
   end
 
   @spec get_by_account_id(integer) :: nil | %Entity{}
