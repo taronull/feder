@@ -27,4 +27,8 @@ defmodule Feder.Auth.Account.Live do
     </div>
     """
   end
+
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
+  end
 end

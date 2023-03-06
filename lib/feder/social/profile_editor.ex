@@ -39,7 +39,7 @@ defmodule Feder.Social.ProfileEditor do
           <%= cond do %>
             <% entry = List.first(@uploads.image.entries) -> %>
               <.live_img_preview entry={entry} class="min-w-full min-h-full object-cover" />
-            <% image = @form.data.image -> %>
+            <% image = @profile.image -> %>
               <img src={image} alt="Current profile image" />
             <% true -> %>
               <Heroicons.photo class="h-8 stroke-1" />
@@ -62,7 +62,10 @@ defmodule Feder.Social.ProfileEditor do
     with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(),
          profile <- if(image, do: Map.put(profile, "image", image.url), else: profile),
          {:ok, _} <- Profile.update(socket.assigns.profile, profile) do
-      {:noreply, socket}
+      {:noreply,
+       socket
+       |> put_flash(:ok, "Successfully updated")
+       |> push_patch(to: ~p"/account")}
     end
   end
 
