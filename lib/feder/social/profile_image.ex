@@ -14,7 +14,7 @@ defmodule Feder.Social.ProfileImage do
     ~H"""
     <figure class={[
       tickle(),
-      "border border-current p-px h-6 aspect-square rounded-full",
+      "border border-current p-px h-6 w-6 rounded-full overflow-clip",
       "grid place-items-center"
     ]}>
       <%= if @profile.image do %>

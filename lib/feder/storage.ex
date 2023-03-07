@@ -5,7 +5,7 @@ defmodule Feder.Storage do
   alias Tesla.Middleware
 
   # TODO: Use custom domain.
-  plug Middleware.BaseUrl, "https://storage.feder.workers.dev"
+  plug Middleware.BaseUrl, env(:url)
   plug Middleware.BearerAuth, token: env(:secret)
 
   def download(path) do
@@ -17,5 +17,6 @@ defmodule Feder.Storage do
   end
 
   defp env, do: Application.get_env(:feder, __MODULE__)
+
   defp env(key), do: env() |> Keyword.get(key)
 end

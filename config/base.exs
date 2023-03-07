@@ -9,6 +9,7 @@ config :feder, Feder.OAuth,
   id: "445767527784-ff0vsts09jg62lqpbfak3vri3vo5qagf.apps.googleusercontent.com"
 
 config :feder, Feder.Storage,
+  url: "https://storage.feder.is",
   secret: "6tnOUH/TdAhmzLzHfkoM5JArx7hSFJUtycSZiy/qqaR2YyQE8BDEL01woUQEmWkx"
 
 config :feder, Feder.Endpoint,

@@ -41,7 +41,7 @@ COPY rel rel
 RUN mix release
 
 # Start a runner.
-FROM alpine:3.16 AS runner
+FROM elixir:alpine AS runner
 
 # Work in `/app` directory.
 WORKDIR /app

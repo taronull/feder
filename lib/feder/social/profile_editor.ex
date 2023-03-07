@@ -31,7 +31,7 @@ defmodule Feder.Social.ProfileEditor do
           class={[
             theme(),
             tickle(),
-            "block border rounded-full h-24 aspect-square overflow-clip",
+            "block border border-current rounded-full h-24 w-24 overflow-clip",
             "grid place-items-center"
           ]}
         >
