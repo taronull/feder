@@ -3,17 +3,6 @@ defmodule Feder.Social.ProfileEditor do
 
   alias Feder.Social.Profile
 
-  def update(assigns, socket) do
-    profile = Profile.get_by_account_id(assigns.id)
-    form = Profile.cast(profile) |> to_form(as: "profile")
-
-    {:ok,
-     socket
-     |> assign(:profile, profile)
-     |> assign(:form, form)
-     |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))}
-  end
-
   def render(assigns) do
     ~H"""
     <div class="container">
@@ -21,7 +10,7 @@ defmodule Feder.Social.ProfileEditor do
         for={@form}
         phx-target={@myself}
         phx-submit="edit_profile"
-        phx-change="noop"
+        phx-change="validate"
         class="space-y-4"
         multipart
       >
@@ -40,7 +29,7 @@ defmodule Feder.Social.ProfileEditor do
             <% entry = List.first(@uploads.image.entries) -> %>
               <.live_img_preview entry={entry} class="min-w-full min-h-full object-cover" />
             <% image = @profile.image -> %>
-              <img src={image} alt="Current profile image" />
+              <img src={image} alt="Current profile image" class="min-w-full min-h-full object-cover" />
             <% true -> %>
               <Heroicons.photo class="h-8 stroke-1" />
           <% end %>
@@ -56,14 +45,34 @@ defmodule Feder.Social.ProfileEditor do
     """
   end
 
-  def handle_event("noop", _, socket), do: {:noreply, socket}
+  def update(%{id: account_id}, socket) do
+    profile = Profile.get_by_account_id(account_id)
+    form = Profile.cast(profile) |> to_form(as: "profile")
 
-  def handle_event("edit_profile", %{"profile" => profile}, socket) do
+    {:ok,
+     socket
+     |> assign(:profile, profile)
+     |> assign(:form, form)
+     |> allow_upload(:image, accept: ~w(.jpg .jpeg .png))}
+  end
+
+  def handle_event("validate", %{"profile" => profile_params}, socket) do
+    form = Profile.cast(socket.assigns.profile, profile_params) |> to_form(as: "profile")
+
+    {:noreply, assign(socket, :form, form)}
+  end
+
+  def handle_event("edit_profile", %{"profile" => profile_params}, socket) do
     with image <- consume_uploaded_entries(socket, :image, &upload/2) |> List.first(),
-         profile <- if(image, do: Map.put(profile, "image", image.url), else: profile),
-         {:ok, _} <- Profile.update(socket.assigns.profile, profile) do
+         profile_params <-
+           if(image, do: Map.put(profile_params, "image", image.url), else: profile_params),
+         {:ok, profile} <- Profile.update(socket.assigns.profile, profile_params) do
+      form = Profile.cast(profile) |> to_form(as: "profile")
+
       {:noreply,
        socket
+       |> assign(:profile, profile)
+       |> assign(:form, form)
        |> put_flash(:ok, "Successfully updated")
        |> push_patch(to: ~p"/account")}
     end
@@ -71,8 +80,9 @@ defmodule Feder.Social.ProfileEditor do
 
   defp upload(%{path: path}, _entry) do
     with {:ok, thumbnail} <- Image.thumbnail(path, 800),
-         {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg") do
-      Feder.Storage.upload("/profile/image/#{Ecto.UUID.generate()}", file)
+         {:ok, file} <- Image.write(thumbnail, :memory, suffix: ".jpg"),
+         {:ok, metadata} <- Feder.Storage.upload("/#{Ecto.UUID.generate()}", file) do
+      {:ok, metadata}
     end
   end
 end

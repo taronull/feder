@@ -18,7 +18,11 @@ defmodule Feder.Social.ProfileImage do
       "grid place-items-center"
     ]}>
       <%= if @profile.image do %>
-        <img class="rounded-full" src={@profile.image} alt={@profile.name} />
+        <img
+          class="rounded-full min-w-full min-h-full object-cover"
+          src={@profile.image}
+          alt={@profile.name}
+        />
       <% else %>
         <Heroicons.user class="h-4 stroke-1" />
       <% end %>

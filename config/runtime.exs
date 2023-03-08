@@ -5,9 +5,6 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  config :feder, Feder.Storage,
-    secret: System.get_env("STORAGE_SECRET") || raise("STORAGE_SECRET is missing.")
-
   config :feder, Feder.Repo,
     url: System.get_env("DATABASE_URL") || raise("DATABASE_URL is missing."),
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),

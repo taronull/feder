@@ -10,7 +10,8 @@ config :feder, Feder.OAuth,
 
 config :feder, Feder.Storage,
   url: "https://storage.feder.is",
-  secret: "6tnOUH/TdAhmzLzHfkoM5JArx7hSFJUtycSZiy/qqaR2YyQE8BDEL01woUQEmWkx"
+  # TODO: Separate dev/prod and encrypt this secret.
+  secret: "XRr3yFI6CV6DsGeNSMyGMmmxHMVFvKQMULvI+4bDWXCcyX9HSuV/BMl30w2qUZjH"
 
 config :feder, Feder.Endpoint,
   url: [host: "localhost"],
