@@ -19,7 +19,7 @@ defmodule Feder.Social.ProfileImage do
     ]}>
       <%= if @profile.image do %>
         <img
-          class="rounded-full min-w-full min-h-full object-cover"
+          class="rounded-full w-5 aspect-square object-cover"
           src={@profile.image}
           alt={@profile.name}
         />
