@@ -45,6 +45,7 @@ defmodule Feder do
 
       alias Feder.Social.ProfileImage
       alias Feder.Social.ProfileEditor
+      alias Feder.Social.WatchEditor
     end
   end
 

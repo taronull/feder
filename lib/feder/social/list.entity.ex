@@ -1,19 +1,19 @@
-defmodule Feder.Social.List.Entity do
+defmodule Feder.Social.Watch.Entity do
   use Ecto.Schema
 
   import Ecto.Changeset
 
   @primary_key false
 
-  schema "list" do
-    field :listing_profile, :id, primary_key: true
-    field :listed_profile, :id, primary_key: true
+  schema "watch" do
+    field :watching_profile, :id, primary_key: true
+    field :watched_profile, :id, primary_key: true
   end
 
   def changeset(entity, attrs) do
     entity
-    |> cast(attrs, [:listing_profile, :listed_profile])
-    |> validate_required([:listing_profile, :listed_profile])
-    |> unique_constraint([:listing_profile, :listed_profile], name: :list_pkey)
+    |> cast(attrs, [:watching_profile, :watched_profile])
+    |> validate_required([:watching_profile, :watched_profile])
+    |> unique_constraint([:watching_profile, :watched_profile], name: :watch_pkey)
   end
 end

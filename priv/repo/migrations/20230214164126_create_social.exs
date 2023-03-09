@@ -11,12 +11,12 @@ defmodule Feder.Repo.Migrations.CreateSocial do
       timestamps()
     end
 
-    create table(:list, primary_key: false) do
-      add :listing_profile,
+    create table(:watch, primary_key: false) do
+      add :watching_profile,
           references(:profile, on_delete: :delete_all),
           primary_key: true
 
-      add :listed_profile,
+      add :watched_profile,
           references(:profile, on_delete: :delete_all),
           primary_key: true
     end
