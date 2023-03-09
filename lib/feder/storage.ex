@@ -7,7 +7,7 @@ defmodule Feder.Storage do
   plug Middleware.BearerAuth, token: env(:secret)
 
   def upload(path, file) do
-    put(path, file) |> dbg()
+    put(path, file)
   end
 
   defp env, do: Application.get_env(:feder, __MODULE__)
