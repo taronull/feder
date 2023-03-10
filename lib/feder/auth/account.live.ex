@@ -1,7 +1,6 @@
 defmodule Feder.Auth.Account.Live do
   use Feder, :live
 
-  alias Feder.Social.WatchEditor
   alias Feder.Auth.Account
 
   def mount(_params, _session, socket) do
@@ -15,7 +14,10 @@ defmodule Feder.Auth.Account.Live do
     <div class="space-y-16">
       <section class="space-y-4">
         <.heading>Watch Profiles</.heading>
-        <.live_component module={WatchEditor} id={@account_id} />
+        <.live_component module={WatchList} id={@account_id} />
+        <.link navigate={~p"/watch"}>
+          <.button>Add a Watch</.button>
+        </.link>
       </section>
 
       <section class="space-y-4">

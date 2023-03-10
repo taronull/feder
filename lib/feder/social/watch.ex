@@ -1,6 +1,7 @@
-defmodule Feder.Social.Profile do
+defmodule Feder.Social.Watch do
   use Feder, :model
 
+  alias Feder.Social.Watch
   alias __MODULE__.Entity
 
   @spec cast(%Entity{}, map) :: Ecto.Changeset.t()
@@ -18,9 +19,7 @@ defmodule Feder.Social.Profile do
     cast(entity, attrs) |> Repo.update()
   end
 
-  @spec get_by_account_id(integer) :: nil | %Entity{}
-  # TODO: Change to multi-profile.
-  def get_by_account_id(account_id) do
-    Repo.get_by(Entity, account_id: account_id)
+  def get_profiles(profile_id) do
+    Watch.Entity.query_profile_by_profile_id(profile_id) |> Repo.all()
   end
 end

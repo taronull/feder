@@ -26,6 +26,7 @@ defmodule Feder.Router do
 
     live_session :user, on_mount: {Feder.Auth.Socket, :require_account} do
       live "/account", Auth.Account.Live
+      live "/watch", Social.Watch.Live
       live "/:profile_name", Journal.Live
     end
   end
