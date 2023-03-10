@@ -134,9 +134,9 @@ defmodule Feder.Core.Components do
       <.input field={@form[:email]} />
       <.input name="email" />
   """
-  attr :id, :any
+  attr :id, :any, default: nil
   attr :name, :any
-  attr :value, :any
+  attr :value, :any, default: nil
   attr :field, Phoenix.HTML.FormField
   attr :class, :list, default: []
   attr :rest, :global, include: ~w(autocomplete disabled form max maxlength min minlength
