@@ -32,22 +32,25 @@ defmodule Feder.Social.Watch.Live do
   def handle_event("noop", _, socket), do: {:noreply, socket}
 
   def handle_event("watch", %{"code" => code}, socket) do
-    watching_profile = Profile.get_by_account_id(socket.assigns.account_id)
-    Feder.Endpoint.broadcast("watch:#{code}", "watch", watching_profile)
+    watching_profile_id = Profile.get_by_account_id(socket.assigns.account_id)
+    Feder.Endpoint.broadcast("watch:#{code}", "watch", watching_profile_id)
     {:noreply, socket |> redirect(to: ~p"/account")}
   end
 
-  def handle_info(%{topic: "watch:" <> code, payload: watching_profile}, socket) do
-    watched_profile = Profile.get_by_account_id(socket.assigns.account_id)
+  def handle_info(%{topic: "watch:" <> code, payload: watching_profile_id}, socket) do
+    watched_profile_id = Profile.get_by_account_id(socket.assigns.account_id)
 
     {:ok, %Watch.Entity{}} =
-      Watch.insert(%{watching_profile: watching_profile.id, watched_profile: watched_profile.id})
+      Watch.insert(%{
+        watching_profile_id: watching_profile_id.id,
+        watched_profile_id: watched_profile_id.id
+      })
 
     Feder.Endpoint.unsubscribe("watch:#{code}")
 
     {:noreply,
      socket
-     |> put_flash(:ok, "#{watching_profile.name} watches your profile")
+     |> put_flash(:ok, "#{watching_profile_id.name} watches your profile")
      |> redirect(to: ~p"/account")}
   end
 

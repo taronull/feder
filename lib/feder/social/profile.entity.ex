@@ -9,13 +9,13 @@ defmodule Feder.Social.Profile.Entity do
 
     belongs_to :account, Feder.Auth.Account.Entity, foreign_key: :account_id
 
-    many_to_many :watching_profile, __MODULE__,
+    many_to_many :watching_profile_id, __MODULE__,
       join_through: Social.Watch.Entity,
-      join_keys: [watching_profile: :id, watched_profile: :id]
+      join_keys: [watching_profile_id: :id, watched_profile_id: :id]
 
-    many_to_many :watched_profile, __MODULE__,
+    many_to_many :watched_profile_id, __MODULE__,
       join_through: Social.Watch.Entity,
-      join_keys: [watched_profile: :id, watching_profile: :id]
+      join_keys: [watched_profile_id: :id, watching_profile_id: :id]
 
     timestamps()
   end
