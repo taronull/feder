@@ -1,18 +1,20 @@
 import Config
 
+# Configure your database
+#
+# The MIX_TEST_PARTITION environment variable can be used
+# to provide built-in test partitioning in CI environment.
+# Run `mix help test` for more information.
 config :feder, Feder.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  # MIX_TEST_PARTITION for test partitioning in CI environment.
-  database: "feder_test#{System.get_env("MIX_TEST_PARTITION")}",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  database: Path.expand("../feder_test.db", Path.dirname(__ENV__.file)),
+  pool_size: 5,
+  pool: Ecto.Adapters.SQL.Sandbox
 
-config :feder, Feder.Endpoint,
+# We don't run a server during test. If one is required,
+# you can enable the server option below.
+config :feder, FederWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "bN8jPPz/FSsdtHDBNTZg/H9227z6KiAphQtV9X0tMUfBoKBdFond0JivhdaimG4i",
-  # Don't run a server during test.
+  secret_key_base: "UZhh0YMBN1wuWj2p21qMfM87AR15ur6UMY578j7m5rk4gUDimq4Ypz/EMk0ScX8d",
   server: false
 
 # In test we don't send emails.
