@@ -1,0 +1,23 @@
+{
+  "name": "Feder Social Learning",
+  "short_name": "Feder",
+  "description": "Feder visualises social recognition data. Our team believe a better society is possible when people can identify with the differences they make. The app enables people to credit one another mutually to shape society in a positive feedback cycle.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#036",
+  "theme_color": "#F60",
+  "icons": [
+    {
+      "src": "/feder-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/feder-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

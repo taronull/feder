@@ -14,8 +14,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: "#FD4F00",
-      }
+        dusk:   "#036",
+        ember:  "#F60",
+        canary: "#FC0",
+      },
     },
   },
   plugins: [

@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]">
+<html lang="en" class="[scrollbar-gutter:stable] bg-dusk text-white ">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="manifest" href={~p"/manifest.json"} />
+		<link rel="shortcut icon" href={~p"/feder.ico"} />
+		<link rel="apple-touch-icon" sizes="180x180" href={~p"/feder-180.png"} />
+		<link rel="icon" type="image/png" sizes="192x192" href={~p"/feder-192.png"} />
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="theme-color" content="#036">
     <meta name="csrf-token" content={get_csrf_token()} />
-    <.live_title suffix=" · Phoenix Framework">
+    <.live_title>
       <%= assigns[:page_title] || "Feder" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-white antialiased">
+  <body class="min-h-screen antialiased md:text-lg">
     <%= @inner_content %>
   </body>
 </html>

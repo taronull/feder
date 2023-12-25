@@ -17,7 +17,7 @@ defmodule FederWeb do
   those modules here.
   """
 
-  def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
+  def static_paths, do: ~w(assets images manifest.json robots.txt sitemap.xml feder.ico feder-180.png feder-192.png feder-512.png)
 
   def router do
     quote do
