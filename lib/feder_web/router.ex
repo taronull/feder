@@ -18,6 +18,7 @@ defmodule FederWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    post "/", PageController, :create
   end
 
   # Other scopes may use custom stacks.
