@@ -17,7 +17,7 @@ RUN mix local.hex --force && \
 # Copy configurations.
 RUN mkdir config
 
-COPY config/base.exs config/$MIX_ENV.exs config/
+COPY config/config.exs config/$MIX_ENV.exs config/
 
 # Get dependencies.
 COPY mix.exs mix.lock ./
@@ -49,15 +49,18 @@ WORKDIR /app
 # Set environment variable for production.
 ENV MIX_ENV="prod"
 
-# Enable IPv6 network for Fly.io.
-ENV ECTO_IPV6 true
-ENV ERL_AFLAGS "-proto_dist inet6_tcp"
-
 # Get basic tools.
-RUN apk add --no-cache libstdc++ ncurses-libs openssl
+RUN apk add --no-cache libstdc++ ncurses-libs openssl 
 
 # Copy the app.
 COPY --from=builder /app/_build/${MIX_ENV}/rel/feder ./
 
-# Start the container.
-CMD bin/migrate && bin/server
+# Install LiteFS dependencies.
+RUN apk add ca-certificates fuse3 sqlite
+
+# Copy in the LiteFS binary and config.
+COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
+COPY litefs.yml /etc/litefs.yml
+
+# Run LiteFS. Server gets started by /litefs.yml.
+ENTRYPOINT litefs mount
