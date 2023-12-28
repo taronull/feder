@@ -7,6 +7,9 @@ defmodule Feder.Application do
 
   @impl true
   def start(_type, _args) do
+    # Run migrations
+    Feder.Release.migrate()
+
     children = [
       FederWeb.Telemetry,
       Feder.Repo,

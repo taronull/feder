@@ -17,8 +17,8 @@ kill_signal = "SIGTERM"
   DATABASE_PATH = "/data/feder.db"
 
 [mounts]
-  source = "data"
-  destination = "/data"
+  source = "litefs"
+  destination = "/var/lib/litefs"
 
 [http_service]
   internal_port = 4000
